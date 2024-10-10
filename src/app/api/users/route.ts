@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import pool from "@/app/libs/mysql";
+import pool from "@/app/libs/postgrase";
 
 export async function POST(req : Request) {
     try {
@@ -7,10 +7,8 @@ export async function POST(req : Request) {
         const credentials = await req.json();
         const {email, password} = credentials;
         console.log(email , password)
-        const db = await pool.getConnection();
-        const query = 'SELECT * FROM users where email = ? and password = ?';
-        const [rows] = await db.execute(query, [email, password]);
-        db.release();
+        const query = 'SELECT * FROM users where email = $1 and password = $2';
+        const {rows} = await pool.query(query, [email, password]);
 
         console.log(rows)
         

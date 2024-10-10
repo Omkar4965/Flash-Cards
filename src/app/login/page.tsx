@@ -5,13 +5,16 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { useUser } from "@/app/context/UserContext";
+import { LoaderCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { setUserId } = useUser();
   const [credentials, setCredential] = useState({ email: "", password: "" });
 
   const handleLogin = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:3000/api/users', { email: credentials.email, password: credentials.password });
@@ -26,6 +29,7 @@ export default function LoginPage() {
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   return (
@@ -53,7 +57,7 @@ export default function LoginPage() {
             className="w-full py-3 rounded-xl bg-yellow-500 text-black font-bold hover:bg-yellow-600 transition duration-200"
             type="submit"
           >
-            Login
+           {loading ? <LoaderCircle className="animate-spin text-black "/> :  "Login"}
           </Button>
         </form>
 

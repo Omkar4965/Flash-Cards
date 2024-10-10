@@ -4,15 +4,18 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { LoaderCircle } from 'lucide-react';
 
 export default function RegisterPage() {
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const submitHandler = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
+        setLoading(true);
         try {
             const res = await axios.post('/api/users/auth', {
                 name: name,
@@ -27,6 +30,7 @@ export default function RegisterPage() {
         } catch (err) {
             console.error("Error during registration:", err.response?.data || err.message);
         }
+        setLoading(false);
     };
 
     return (
@@ -65,7 +69,7 @@ export default function RegisterPage() {
                         className="w-full py-3  rounded-xl bg-yellow-500 text-black font-bold hover:bg-yellow-600 transition duration-200"
                         type="submit"
                     >
-                        Register
+                          {loading ? <LoaderCircle className="animate-spin text-black "/> :  "Register"}
                     </Button>
                 </form>
                 <div className="flex flex-col justify-center items-center mt-4">

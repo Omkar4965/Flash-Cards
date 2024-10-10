@@ -17,9 +17,11 @@ const UserContext = createContext<UserContextType>({
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<string | null>(() => {
     // Get userId from localStorage if available
-    const storedUserId = localStorage.getItem('userId');
-    return storedUserId ? storedUserId : null;
+    const userId = localStorage.getItem('userId');
+    return userId || null;
   });
+
+  
 
   useEffect(() => {
     // Update localStorage whenever userId changes

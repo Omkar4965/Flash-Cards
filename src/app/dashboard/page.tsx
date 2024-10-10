@@ -8,46 +8,55 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserContext";
 import axios from "axios";
 import { motion } from 'framer-motion';
-
+import { PulseLoader } from 'react-spinners';
+import { LoaderCircle } from 'lucide-react';
 const Dashboard = () => {
     const { userId } = useUser();
     const router = useRouter();
     const [flashcards, setFlashcards] = useState([]);
     const [showCreateForm, setShowCreateForm] = useState(false);
-    const [flashcardTopics, setFlashcardTopics] = useState("");
+    const [flashcardtopics, setflashcardtopics] = useState("");
     const [flashquestion, setFlashquestion] = useState("");
     const [flashanswer, setFlashanswer] = useState("");
     const [editingFlashId, setEditingFlashId] = useState(null);
     const [editTopic, setEditTopic] = useState("");
     const [isEditing, setisEditing] = useState(false);
     const [logout, showlogout] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [loading2, setLoading2] = useState(false);
 
     useEffect(() => {
         const fetchFlashcards = async () => {
+            setLoading(true);
             try {
                 const res = await axios.get(`http://localhost:3000/api/flashcards?user_id=${userId}`);
                 setFlashcards(res.data);
+                console.log("res.data : ",res.data)
             } catch (err) {
                 console.error("Error fetching flashcards:", err);
             }
+            setLoading(false);
         };
 
         if (userId) {
             fetchFlashcards();
+        }else{
+            router.push('/login')
         }
     }, [userId]);
 
     const createHandler = async (e) => {
         e.stopPropagation();
-        if (!flashcardTopics || !flashquestion || !flashanswer) {
+        if (!flashcardtopics || !flashquestion || !flashanswer) {
             console.warn("Please fill out all fields.");
             return;
         }
 
+        setLoading2(true);
         try {
             
             const res = await axios.post(`http://localhost:3000/api/flashcards?user_id=${userId}`, {
-                flashcardTopics: flashcardTopics
+                flashcardtopics: flashcardtopics
             });
             const res2 = await axios.post('http://localhost:3000/api/queAns', {
                 user_id: userId,
@@ -57,8 +66,8 @@ const Dashboard = () => {
             });
 
             if (res && res2) {
-                setFlashcards((prev) => [...prev, { id: res.data.id, flashcardTopics }]);
-                setFlashcardTopics("");
+                setFlashcards((prev) => [...prev, { id: res.data.id, flashcardtopics }]);
+                setflashcardtopics("");
                 setFlashquestion("");
                 setFlashanswer("");
                 setShowCreateForm(false);
@@ -66,6 +75,7 @@ const Dashboard = () => {
         } catch (err) {
             console.error("Error creating flashcard:", err);
         }
+        setLoading2(false);
     };
 
     const saveEditHandler = async (e, id) => {
@@ -75,13 +85,13 @@ const Dashboard = () => {
         try {
             const res = await axios.put(`http://localhost:3000/api/flashcards`, {
                 user_id: userId,
-                flashcardTopics: editTopic,
-                flashcardTopicsId: id
+                flashcardtopics: editTopic,
+                flashcardtopicsId: id
             });
 
             if (res) {
                 setFlashcards((prev) =>
-                    prev.map((flash) => (flash.id === id ? { ...flash, flashcardTopics: editTopic } : flash))
+                    prev.map((flash) => (flash.id === id ? { ...flash, flashcardtopics: editTopic } : flash))
                 );
                 setEditingFlashId(null);
                 setisEditing(!isEditing);
@@ -109,79 +119,82 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-black text-yellow-400 p-6 font-sans bg-animation relative">
+        
+        <div className="min-h-screen flex flex-col justify-center items-center bg-black text-yellow-400 p-6 font-sans bg-animation relative">
             <AnimatedBackground />
             <h1 className="text-5xl font-extrabold mb-12 text-center tracking-wider">Flashcards</h1>
-            <div className="absolute top-4 right-6 flex flex-col items-center space-x-2 hover:cursor-pointer">
+            <div className="absolute top-4 right-6 flex flex-col  items-center space-x-2 hover:cursor-pointer">
                 <User className="h-8 w-8 text-yellow-400" onClick={() => {showlogout(!logout)}} />
               {  logout &&  <Button className="text-yellow-400 text-2xl font-bold" onClick={logoutHandler}>Logout</Button>}
                </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {flashcards.map((flash) => (
-                    <Card
-                        key={flash.id}
-                        className="bg-black border-2 border-yellow-400 shadow-lg shadow-yellow-400/50 cursor-pointer relative h-60 transition-all duration-300 ease-in-out hover:scale-105"
-                        onClick={() => !isEditing && router.push(`/dashboard/${flash.id}`)}
-                    >
-                        <CardContent className="p-6 flex items-center justify-center h-full relative">
-                            {editingFlashId === flash.id ? (
-                                <Input
-                                    value={editTopic}
-                                    onChange={(e) => setEditTopic(e.target.value)}
-                                    className="text-3xl font-bold text-center leading-tight text-yellow-400 border-none"
-                                />
-                            ) : (
-                                <h2 className="text-3xl font-bold text-center leading-tight text-yellow-400">
-                                    {flash.flashcardTopics}
-                                </h2>
-                            )}
-                            <div className="absolute top-4 right-4 flex space-x-2">
+            {   loading ? <PulseLoader size={15} color={"#FACC15"} /> :  
+                <div className="grid justify-center items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    {flashcards.map((flash) => (
+                        <Card
+                            key={flash.id}
+                            className="bg-black border-2 min-w-[350px] border-yellow-400 shadow-lg shadow-yellow-400/50 cursor-pointer relative h-60 transition-all duration-300 ease-in-out hover:scale-105"
+                            onClick={() => !isEditing && router.push(`/dashboard/${flash.id}`)}
+                        >
+                            <CardContent className="p-6 flex items-center justify-center h-full relative">
                                 {editingFlashId === flash.id ? (
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="hover:bg-yellow-400 hover:text-black rounded-full transition-colors duration-300"
-                                        onClick={(e) => saveEditHandler(e, flash.id)}
-                                    >
-                                        <Check className="h-4 w-4" />
-                                    </Button>
+                                    <Input
+                                        value={editTopic}
+                                        onChange={(e) => setEditTopic(e.target.value)}
+                                        className="text-3xl font-bold text-center leading-tight text-yellow-400 border-none"
+                                    />
                                 ) : (
+                                    <h2 className="text-3xl font-bold text-center leading-tight text-yellow-400">
+                                        {flash.flashcardtopics}
+                                    </h2>
+                                )}
+                                <div className="absolute top-4 right-4 flex space-x-2">
+                                    {editingFlashId === flash.id ? (
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="hover:bg-yellow-400 hover:text-black rounded-full transition-colors duration-300"
+                                            onClick={(e) => saveEditHandler(e, flash.id)}
+                                        >
+                                            <Check className="h-4 w-4" />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="hover:bg-yellow-400 hover:text-black rounded-full transition-colors duration-300"
+                                            onClick={(e) => {
+                                                setisEditing(true);
+                                                e.stopPropagation();
+                                                setEditingFlashId(flash.id);
+                                                setEditTopic(flash.flashcardtopics);
+                                            }}
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    )}
                                     <Button
                                         variant="ghost"
                                         size="icon"
+                                        onClick={(e) => deleteHandler(flash.id, e)}
                                         className="hover:bg-yellow-400 hover:text-black rounded-full transition-colors duration-300"
-                                        onClick={(e) => {
-                                            setisEditing(true);
-                                            e.stopPropagation();
-                                            setEditingFlashId(flash.id);
-                                            setEditTopic(flash.flashcardTopics);
-                                        }}
                                     >
-                                        <Pencil className="h-4 w-4" />
+                                        <Trash className="h-4 w-4" />
                                     </Button>
-                                )}
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={(e) => deleteHandler(flash.id, e)}
-                                    className="hover:bg-yellow-400 hover:text-black rounded-full transition-colors duration-300"
-                                >
-                                    <Trash className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            }
             {showCreateForm ? (
                 <Card className="fixed bottom-8 right-8 left-8 bg-black border-2 border-yellow-400 shadow-lg shadow-yellow-400/50 text-yellow-400 max-w-md mx-auto">
                     <CardContent className="p-6">
-                        <h2 className="text-3xl font-bold mb-6 text-center">{flashcardTopics == "" ? "New Flashcard" : flashcardTopics }</h2>
+                        <h2 className="text-3xl font-bold mb-6 text-center">{flashcardtopics == "" ? "New Flashcard" : flashcardtopics }</h2>
                         <div className="space-y-4">
                             <Input
                                 placeholder="Flashcard Topic"
-                                value={flashcardTopics}
-                                onChange={(e) => setFlashcardTopics(e.target.value)}
+                                value={flashcardtopics}
+                                onChange={(e) => setflashcardtopics(e.target.value)}
                                 className="bg-black border-yellow-400 text-yellow-400 rounded-xl placeholder-yellow-400/60"
                             />
                             <Input
@@ -201,7 +214,7 @@ const Dashboard = () => {
                                     className="bg-yellow-400 text-black hover:bg-yellow-500 rounded-xl transition-colors duration-300"
                                     onClick={(e) => { createHandler(e) }}
                                 >
-                                    Create
+                                    {loading2 ? <LoaderCircle className="animate-spin text-black "/> :  "Create"}
                                 </Button>
                                 <Button
                                     variant="outline"

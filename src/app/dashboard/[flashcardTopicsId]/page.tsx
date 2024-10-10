@@ -8,15 +8,17 @@ import axios from 'axios';
 import { useUser } from '@/app/context/UserContext';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import NewFlashcard from '@/app/components/newQueAns';
+import { PulseLoader } from 'react-spinners';
 
 export default function FlashcardTopicPage() {
   const params = useParams();
   const { userId } = useUser();
   const flashcards_id = params.flashcardTopicsId;
+  console.log("flashcards_id : ",flashcards_id)
   const router = useRouter();
   const [flashcardData, setFlashcardData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
   const [error, setError] = useState(null);
   const [flashTopic, setFlashTopic] = useState("");
   const [logout, showlogout] = useState(false);
@@ -75,14 +77,14 @@ const deleteHandler = async (que, ans)=>{
   useEffect(() => {
     async function fetchData() {
       if (!userId || !flashcards_id) return;
-
+      setLoading2(true)
       try {
         setLoading(true);
         const res = await axios.get(`http://localhost:3000/api/queAns?user_id=${userId}&flashcards_id=${flashcards_id}`);
         const res2 = await axios.get(`http://localhost:3000/api/flashcards?user_id=${userId}`);
         setFlashcardData(res.data);
         if (!res.data.length){ settAddnew(true);}
-        setFlashTopic(res2.data.filter(flash => flash.id == flashcards_id)[0].flashcardTopics);
+        setFlashTopic(res2.data.filter(flash => flash.id == flashcards_id)[0].flashcardtopics);
 
         setError(null);
       } catch (error) {
@@ -90,10 +92,16 @@ const deleteHandler = async (que, ans)=>{
         setError("Failed to fetch flashcard data. Please try again.");
       } finally {
         setLoading(false);
+        setLoading2(false)
       }
     } 
 
-    fetchData();
+    if (userId) {
+      fetchData();
+    }else{
+        router.push('/login')
+    }
+
   }, [userId, flashcards_id]);
 
   const [[page, direction], setPage] = useState([0, 0]);
@@ -133,6 +141,7 @@ const deleteHandler = async (que, ans)=>{
             transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
             className="absolute w-full"
           >
+             {   loading2 ? <PulseLoader size={15} color={"#FACC15"} /> : 
             <AttractiveFlashcard
               question={flashcardData[currentIndex]?.question}
               answer={flashcardData[currentIndex]?.answer}
@@ -141,6 +150,7 @@ const deleteHandler = async (que, ans)=>{
               addNew = {addNew} 
               settAddnew = {settAddnew}
             />
+          }
           </motion.div>
         </AnimatePresence>
         <Button 

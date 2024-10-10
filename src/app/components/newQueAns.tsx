@@ -3,12 +3,10 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Input } from "@/components/ui/input";
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
-import { useUser } from '../context/UserContext';
-import { X } from 'lucide-react';
+import { LoaderCircle, X } from 'lucide-react';
 
-const NewFlashcard = ({onAddNew, settAddnew}) => {
-  const {userId} =  useUser()
+const NewFlashcard = ({ onAddNew, settAddnew }) => {
+  const [loading, setLoading] = useState(false);
   const [flashcardData, setflashcardData] = useState({
     que: "",
     ans: ""
@@ -20,11 +18,14 @@ const NewFlashcard = ({onAddNew, settAddnew}) => {
   };
 
   async function submitHandler() {
+    setLoading(true);
     try {
-       onAddNew(flashcardData.que, flashcardData.ans)
+      await onAddNew(flashcardData.que, flashcardData.ans);
+      setflashcardData({ que: "", ans: "" });  // Clear form after submission
     } catch (error) {
       console.error("Error creating new flashcard:", error);
     }
+    setLoading(false);
   }
 
   return (
@@ -37,13 +38,11 @@ const NewFlashcard = ({onAddNew, settAddnew}) => {
       <Button
         className="absolute top-2 right-2 hover:bg-yellow-400 hover:text-black rounded-full text-yellow-400"
         onClick={() => settAddnew(false)}
-      > <X  className="w-5 h-5" /> </Button>
+      >
+        <X className="w-5 h-5" />
+      </Button>
 
-      <h2 className="text-2xl font-bold text-yellow-400 mb-6">
-        Add Q&A
-      </h2>
-
-      
+      <h2 className="text-2xl font-bold text-yellow-400 mb-6">Add Q&A</h2>
 
       <div className="w-full max-w-md space-y-4">
         <Input
@@ -63,10 +62,11 @@ const NewFlashcard = ({onAddNew, settAddnew}) => {
       </div>
 
       <Button
-        className="mt-6 bg-yellow-400 text-black rounded-xl hover:bg-yellow-500 border border-yellow-400 hover:shadow-lg transform hover:scale-105 transition duration-200"
+        className={`mt-6 bg-yellow-400 text-black rounded-xl hover:bg-yellow-500 border border-yellow-400 hover:shadow-lg transform hover:scale-105 transition duration-200 ${loading ? 'cursor-not-allowed' : ''}`}
         onClick={submitHandler}
+        disabled={loading}  // Disable button when loading
       >
-        Add Flashcard
+        {loading ? <LoaderCircle className="animate-spin text-white w-6 h-6"/> : "Add Flashcard"}
       </Button>
     </motion.div>
   );

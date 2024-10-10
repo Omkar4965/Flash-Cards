@@ -5,20 +5,22 @@ import { Edit, FilePlus, Trash, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import NewFlashcard from './newQueAns';
+import { LoaderCircle } from 'lucide-react';
 
 const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, settAddnew }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [newQuestion, setNewQuestion] = useState(question);
   const [newAnswer, setNewAnswer] = useState(answer);
+  const [isLoading, setIsLoading] = useState(false); // Loading state for saving changes
+  const [isDeleting, setIsDeleting] = useState(false); // Loading state for deleting
 
   const handleFlip = () => {
     if (!isEditing) setIsFlipped(!isFlipped);
   };
 
-  const fileplusHandler = (e)=>{
+  const fileplusHandler = (e) => {
     e.stopPropagation(); 
-    console.log("fileplusHandler")
     settAddnew(!addNew);
   }
 
@@ -29,6 +31,7 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
 
   const handleSave = async (e) => {
     e.stopPropagation();
+    setIsLoading(true); // Start loading
     try {
       await axios.put("http://localhost:3000/api/queAns", {
         question,
@@ -40,16 +43,20 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
     } catch (error) {
       console.error("Error updating flashcard:", error);
     }
+    setIsLoading(false); // Stop loading
   };
-  const deleteHandler = async (e)=>{
-    e.stopPropagation(); 
-    try{
-      onDelete(question, answer)
-    }catch(err){
-      console.log("err while deleting : ",err)
+
+  const deleteHandler = async (e) => {
+    e.stopPropagation();
+    setIsDeleting(true); // Start loading
+    try {
+      await onDelete(question, answer);
+    } catch (err) {
+      console.log("Error while deleting:", err);
     }
-    console.log("deleteHandler")
-  }
+    setIsDeleting(false); // Stop loading
+  };
+
   const cardVariants = {
     front: { rotateY: 0, transition: { duration: 0.6 } },
     back: { rotateY: 180, transition: { duration: 0.6 } },
@@ -81,15 +88,16 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
             className="hover:bg-yellow-400 hover:text-black rounded-full text-yellow-400"
             onClick={handleEdit}
           >
-           { isEditing ? <X className="w-5 h-5" /> :  <Edit className="w-5 h-5" />}
+            {isEditing ? <X className="w-5 h-5" /> : <Edit className="w-5 h-5" />}
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="hover:bg-yellow-400 hover:text-black rounded-full text-yellow-400"
             onClick={deleteHandler}
+            disabled={isDeleting} // Disable button when deleting
           >
-            <Trash className="w-5 h-5" />
+            {isDeleting ? <LoaderCircle className="animate-spin h-5 w-5 text-yellow-400" /> : <Trash className="w-5 h-5" />}
           </Button>
         </div>
       </div>
@@ -113,8 +121,9 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
         <Button
           className="mt-4 text-yellow-400 border border-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors duration-200"
           onClick={handleSave}
+          disabled={isLoading} // Disable button when loading
         >
-          Save Changes
+          {isLoading ? <LoaderCircle className="animate-spin text-yellow-400 h-6 w-6" /> : "Save Changes"}
         </Button>
       )}
       {!isEditing && (
@@ -126,10 +135,8 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
   );
 
   return (
-    addNew ? <NewFlashcard onAddNew = {onAddNew} settAddnew ={settAddnew} /> :  <div
-      className="w-full h-[400px] perspective-1000 cursor-pointer"
-      onClick={handleFlip}
-    >
+    addNew ? <NewFlashcard onAddNew={onAddNew} settAddnew={settAddnew} /> : 
+    <div className="w-full h-[400px] perspective-1000 cursor-pointer" onClick={handleFlip}>
       <motion.div
         className="w-full h-full relative preserve-3d"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
