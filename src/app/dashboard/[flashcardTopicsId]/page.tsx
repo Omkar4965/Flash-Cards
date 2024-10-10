@@ -112,7 +112,7 @@ const deleteHandler = async (que, ans)=>{
       
       {/* User Icon */}
       <ArrowLeft className="absolute top-4 left-6 h-10 w-11 hover:bg-yellow-400 hover:text-black rounded-full text-yellow-400 p-2" onClick={() => router.push('/dashboard')} />
-      <div className="absolute top-4 right-6 flex flex-col items-center space-x-2">
+      <div className="absolute top-4 right-6 flex flex-col items-center space-x-2 hover:cursor-pointer">
                 <User className="h-8 w-8 text-yellow-400" onClick={() => {showlogout(!logout)}} />
               {  logout &&  <Button className="text-yellow-400 text-2xl font-bold" onClick={logoutHandler}>Logout</Button>}
         </div>

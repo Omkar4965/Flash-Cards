@@ -112,7 +112,7 @@ const Dashboard = () => {
         <div className="min-h-screen bg-black text-yellow-400 p-6 font-sans bg-animation relative">
             <AnimatedBackground />
             <h1 className="text-5xl font-extrabold mb-12 text-center tracking-wider">Flashcards</h1>
-            <div className="absolute top-4 right-6 flex flex-col items-center space-x-2">
+            <div className="absolute top-4 right-6 flex flex-col items-center space-x-2 hover:cursor-pointer">
                 <User className="h-8 w-8 text-yellow-400" onClick={() => {showlogout(!logout)}} />
               {  logout &&  <Button className="text-yellow-400 text-2xl font-bold" onClick={logoutHandler}>Logout</Button>}
                </div>

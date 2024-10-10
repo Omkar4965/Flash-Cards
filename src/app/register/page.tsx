@@ -20,8 +20,6 @@ export default function RegisterPage() {
                 password: password
             });
 
-            console.log("hi");
-
             if (res) {
                 console.log("User registered successfully");
                 router.push('/login');
@@ -32,15 +30,15 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-black text-yellow-400">
-            <div className="bg-black border border-yellow-400 p-8 max-w-md w-full shadow-lg shadow-yellow-400/50 rounded-xl">
-                <h1 className="text-3xl font-bold mb-8 text-center">Register</h1>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 text-yellow-400">
+            <div className="bg-black border border-yellow-500 p-10 max-w-md w-full shadow-2xl rounded-2xl">
+                <h1 className="text-4xl font-extrabold mb-8 text-center">Register</h1>
                 <form className="space-y-6" onSubmit={submitHandler}>
                     <div>
                         <Input
                             type="text"
                             placeholder="Full Name"
-                            className="w-full p-3 rounded border border-yellow-500 bg-black text-yellow-400"
+                            className="w-full p-4  rounded-xl border border-yellow-500 bg-black text-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
                             value={name}
                             onChange={e => setName(e.target.value)}
                         />
@@ -49,7 +47,7 @@ export default function RegisterPage() {
                         <Input
                             type="email"
                             placeholder="Email"
-                            className="w-full p-3 rounded border border-yellow-500 bg-black text-yellow-400"
+                            className="w-full p-4  rounded-xl border border-yellow-500 bg-black text-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                         />
@@ -58,21 +56,26 @@ export default function RegisterPage() {
                         <Input
                             type="password"
                             placeholder="Password"
-                            className="w-full p-3 rounded border border-yellow-500 bg-black text-yellow-400"
+                            className="w-full p-4  rounded-xl border border-yellow-500 bg-black text-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
                         />
                     </div>
                     <Button
-                        className="w-full bg-yellow-500 text-black p-3 rounded-lg hover:bg-yellow-600"
+                        className="w-full py-3  rounded-xl bg-yellow-500 text-black font-bold hover:bg-yellow-600 transition duration-200"
                         type="submit"
                     >
                         Register
                     </Button>
                 </form>
-                <div className="flex flex-col justify-center items-center mt-2">
-                    <p >Already have an account ?</p>
-                    <Button className="border bg-yellow-400 border-yellow-400 text-black m-2 rounded-xl hover:text-yellow-400" onClick={() => router.push('/login')}> Login </Button>
+                <div className="flex flex-col justify-center items-center mt-4">
+                    <p className="text-sm">Already have an account?</p>
+                    <Button
+                        className="mt-2 border border-yellow-500 bg-yellow-500 text-black px-4 py-2  rounded-xl hover:bg-black hover:text-yellow-400 transition duration-200"
+                        onClick={() => router.push('/login')}
+                    >
+                        Login
+                    </Button>
                 </div>
             </div>
         </div>
