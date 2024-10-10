@@ -1,18 +1,38 @@
 import { NextResponse } from "next/server";
 import pool from "@/app/libs/mysql";
 
-export async function GET() {
+export async function GET(req) {
+    let db;
     try {
-        const db = await pool.getConnection();
-        const query = 'SELECT * FROM queAns';
-        const [rows] = await db.execute(query);
-        db.release();
+        const { searchParams } = new URL(req.url);
+        const user_id = searchParams.get('user_id');
+        const flashcards_id = searchParams.get('flashcards_id');
         
+        if (!user_id || !flashcards_id) {
+            return NextResponse.json({
+                error: "Missing required query parameters: user_id or flashcards_id"
+            }, { status: 400 });
+        }
+
+        console.log("user_id", user_id);
+        console.log("flashcards_id", flashcards_id);
+
+        db = await pool.getConnection();
+        const query = 'SELECT * FROM queAns WHERE user_id = ? AND flashcards_id = ?';
+        const [rows] = await db.execute(query, [user_id, flashcards_id]);
+        
+        console.log("rows", rows);
+
         return NextResponse.json(rows, { status: 200 });
-    } catch (error : any) {
+    } catch (error: any) {
+        console.error("Error fetching queAns:", error);
         return NextResponse.json({
             error: error.message || "Error fetching queAns"
         }, { status: 500 });
+    } finally {
+        if (db) {
+            db.release(); // Make sure the connection is always released
+        }
     }
 }
 

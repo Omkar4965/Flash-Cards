@@ -2,3 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes backgroundAnimation {
+    0% {
+        background-color: #000000; /* Starting color */
+    }
+    50% {
+        background-color: #1a1a1a; /* Middle color */
+    }
+    100% {
+        background-color: #000000; /* Ending color */
+    }
+}
+
+.bg-animation {
+    animation: backgroundAnimation 8s ease-in-out infinite;
+}

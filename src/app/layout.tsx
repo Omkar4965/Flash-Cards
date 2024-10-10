@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-
+import { UserProvider } from '@/app/context/UserContext';
 export const meta: Metadata = {
   title: "My Next.js Site",
   description: "My Next.js site description",
@@ -13,9 +12,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        >
-        {children}
+      <body>
+      <UserProvider>
+          {children}
+        </UserProvider>
       </body>
     </html>
   );
