@@ -1,4 +1,4 @@
-# Flashcards Website
+# Flashcards 
 
 ## Description
 A web application that allows users to create their own accounts and design personalized flashcards. Each flashcard can feature any number of questions and answers, displayed on the front and back sides of the card. Users can flip the cards to reveal answers, making it an engaging tool for studying and memorization.
