@@ -1,10 +1,10 @@
 "use client";
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 // Define the shape of the user context state
 interface UserContextType {
   userId: string | null;
-  setUserId: (id: string | null) => void; // Allow null as a valid state
+  setUserId: (id: string | null) => void;
 }
 
 // Create the context with default values
@@ -16,16 +16,24 @@ const UserContext = createContext<UserContextType>({
 // Create a provider component
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<string | null>(() => {
-    // Get userId from localStorage if available, only in the browser
-    const storedUserId = localStorage.getItem('userId');
-    return storedUserId || null;
-  }); // Initialize as null
+    // Initialize userId from localStorage if available
+    if (typeof window !== 'undefined') {
+      try {
+        return localStorage.getItem('userId') || null;
+      } catch (error) {
+        console.error('Failed to retrieve userId from localStorage', error);
+        return null;
+      }
+    }
+    return null;
+  });
 
-  // useEffect(() => {
-  //   // Get userId from localStorage if available, only in the browser
-  //   const storedUserId = localStorage.getItem('userId');
-  //   setUserId(storedUserId || null);
-  // }, []); // Only run once when the component mounts 
+  useEffect(() => {
+    if (userId !== null) {
+      // Persist userId to localStorage whenever it changes
+      localStorage.setItem('userId', userId);
+    }
+  }, [userId]);
 
   return (
     <UserContext.Provider value={{ userId, setUserId }}>
