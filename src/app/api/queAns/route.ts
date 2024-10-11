@@ -53,14 +53,17 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
     try {
         const body = await req.json();
-        const { question, answer, newquestion, newanswer } = body;
+        const {question,
+            answer,
+            newQuestion,
+            newAnswer } = body;
 
-        if (!question || !answer || !newquestion || !newanswer) {
+        if (!question || !answer || !newQuestion || !newAnswer) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         const query = `UPDATE queAns SET question = $1, answer = $2 WHERE question = $3 AND answer = $4`;
-        const res = await pool.query(query, [newquestion, newanswer, question, answer]);
+        const res = await pool.query(query, [newQuestion, newAnswer, question, answer]);
 
         if (res.rowCount === 0) {
             return NextResponse.json({ message: `No record found to update for question: ${question}, answer: ${answer}` }, { status: 404 });
