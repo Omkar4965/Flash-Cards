@@ -20,7 +20,7 @@ export default function RegisterPage() {
         e.preventDefault(); 
         setLoading(true);
         try {
-            const res = await axios.post('/api/users/auth', {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/users/auth`, {
                 name: name,
                 email: email,
                 password: password

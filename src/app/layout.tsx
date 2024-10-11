@@ -4,8 +4,8 @@ import { UserProvider } from '@/app/context/UserContext';
 
 // Use `metadata` instead of `meta`
 export const metadata: Metadata = {
-  title: "My Next.js Site",
-  description: "My Next.js site description",
+  title: "Flashcards",
+  description: "App for revision purposes.",
 };
 
 export default function RootLayout({
