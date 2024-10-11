@@ -84,7 +84,7 @@ const FlashcardTopicPage: React.FC = () => {
       question: newQuestion,
       answer: newAnswer,
     }]})
-      paginate(1);
+      
 
     } catch (error) {
       console.error("Error updating flashcard:", error);
