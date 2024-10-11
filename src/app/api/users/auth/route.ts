@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import pool from "@/app/libs/postgrase";
-import bcrypt from "bcrypt"; // Import bcrypt for password hashing
+// import bcrypt from "bcrypt"; // Import bcrypt for password hashing
 
 
 export async function POST(req: Request) {

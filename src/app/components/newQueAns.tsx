@@ -5,7 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from '@/components/ui/button';
 import { LoaderCircle, X } from 'lucide-react';
 
-const NewFlashcard = ({ onAddNew, settAddnew }) => {
+interface NewFlashcardProps {
+  onAddNew: (question: string, answer: string) => Promise<void>;
+  settAddnew: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const NewFlashcard: React.FC<NewFlashcardProps> = ({ onAddNew, settAddnew }) => {
   const [loading, setLoading] = useState(false);
   const [flashcardData, setflashcardData] = useState({
     que: "",
@@ -48,25 +53,25 @@ const NewFlashcard = ({ onAddNew, settAddnew }) => {
         <Input
           type="text"
           placeholder="Question"
-          className="w-full text-white bg-black border rounded-xl border-yellow-400 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 p-3"
+          className="w-full text-white bg-black border rounded-xl border-yellow-400 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
           value={flashcardData.que}
           onChange={(e) => setflashcardData({ ...flashcardData, que: e.target.value })}
         />
         <Input
           type="text"
           placeholder="Answer"
-          className="w-full text-white bg-black border rounded-xl border-yellow-400 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 p-3"
+          className="w-full text-white bg-black border rounded-xl border-yellow-400 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
           value={flashcardData.ans}
           onChange={(e) => setflashcardData({ ...flashcardData, ans: e.target.value })}
         />
       </div>
 
       <Button
-        className={`mt-6 bg-yellow-400 text-black rounded-xl hover:bg-yellow-500 border border-yellow-400 hover:shadow-lg transform hover:scale-105 transition duration-200 ${loading ? 'cursor-not-allowed' : ''}`}
+        className="mt-4 text-yellow-400 border border-yellow-400 hover:bg-yellow-400 hover:text-black transition-colors duration-200"
         onClick={submitHandler}
-        disabled={loading}  // Disable button when loading
+        disabled={loading} // Disable button when loading
       >
-        {loading ? <LoaderCircle className="animate-spin text-white w-6 h-6"/> : "Add Flashcard"}
+        {loading ? <LoaderCircle className="animate-spin text-yellow-400 h-6 w-6" /> : "Add Flashcard"}
       </Button>
     </motion.div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { useUser } from "@/app/context/UserContext";
@@ -9,11 +9,15 @@ import { LoaderCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const { setUserId } = useUser();
-  const [credentials, setCredential] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState<boolean>(false);
+  
+  // Add types for credentials object
+  const [credentials, setCredential] = useState<{ email: string; password: string }>({ email: "", password: "" });
 
-  const handleLogin = async (e) => {
+  const { setUserId } = useUser();
+
+  // Add typing for the handleLogin event
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true);
     e.preventDefault();
     try {
@@ -26,10 +30,19 @@ export default function LoginPage() {
       } else {
         console.log("user login unsuccessfully");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
     }
     setLoading(false);
+  };
+
+  // Add typing for the input onChange handlers
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCredential({ ...credentials, email: e.target.value });
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCredential({ ...credentials, password: e.target.value });
   };
 
   return (
@@ -42,7 +55,7 @@ export default function LoginPage() {
               type="email"
               placeholder="Email"
               className="w-full p-4 border border-yellow-500 bg-black text-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
-              onChange={e => setCredential({ ...credentials, email: e.target.value })}
+              onChange={handleEmailChange}
             />
           </div>
           <div>
@@ -50,14 +63,14 @@ export default function LoginPage() {
               type="password"
               placeholder="Password"
               className="w-full p-4 border border-yellow-500 bg-black text-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
-              onChange={e => setCredential({ ...credentials, password: e.target.value })}
+              onChange={handlePasswordChange}
             />
           </div>
           <Button
             className="w-full py-3 rounded-xl bg-yellow-500 text-black font-bold hover:bg-yellow-600 transition duration-200"
             type="submit"
           >
-           {loading ? <LoaderCircle className="animate-spin text-black "/> :  "Login"}
+            {loading ? <LoaderCircle className="animate-spin text-black" /> : "Login"}
           </Button>
         </form>
 

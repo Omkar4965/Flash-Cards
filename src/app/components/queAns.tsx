@@ -7,11 +7,29 @@ import axios from 'axios';
 import NewFlashcard from './newQueAns';
 import { LoaderCircle } from 'lucide-react';
 
-const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, settAddnew }) => {
+interface AttractiveFlashcardProps {
+  question: string;
+  answer: string;
+  onAddNew: (question: string, answer: string) => Promise<void>;
+  onDelete: (question: string, answer: string) => Promise<void>;
+  addNew: boolean;
+  settAddnew: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSavequeAns: (question: string, answer: string, newquestion: string, newAnswer: string) => Promise<void>;
+}
+
+const AttractiveFlashcard: React.FC<AttractiveFlashcardProps> = ({
+  question,
+  answer,
+  onAddNew,
+  onDelete,
+  addNew,
+  settAddnew,
+  handleSavequeAns
+}) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [newQuestion, setNewQuestion] = useState(question);
-  const [newAnswer, setNewAnswer] = useState(answer);
+  const [newQuestion, setNewQuestion] = useState<string>(question);
+  const [newAnswer, setNewAnswer] = useState<string>(answer);
   const [isLoading, setIsLoading] = useState(false); // Loading state for saving changes
   const [isDeleting, setIsDeleting] = useState(false); // Loading state for deleting
 
@@ -19,26 +37,23 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
     if (!isEditing) setIsFlipped(!isFlipped);
   };
 
-  const fileplusHandler = (e) => {
+  const fileplusHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); 
     settAddnew(!addNew);
-  }
+  };
 
-  const handleEdit = (e) => {
+  const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsEditing(!isEditing);
   };
 
-  const handleSave = async (e) => {
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsLoading(true); // Start loading
     try {
-      await axios.put("http://localhost:3000/api/queAns", {
-        question,
-        answer,
-        newquestion: newQuestion,
-        newanswer: newAnswer,
-      });
+
+      await handleSavequeAns( question, answer , newQuestion , newAnswer);
+      
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating flashcard:", error);
@@ -46,11 +61,11 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
     setIsLoading(false); // Stop loading
   };
 
-  const deleteHandler = async (e) => {
+  const deleteHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setIsDeleting(true); // Start loading
     try {
-      await onDelete(question, answer);
+      await onDelete(newQuestion, newAnswer);
     } catch (err) {
       console.log("Error while deleting:", err);
     }
@@ -62,7 +77,7 @@ const AttractiveFlashcard = ({ question, answer, onAddNew, onDelete, addNew, set
     back: { rotateY: 180, transition: { duration: 0.6 } },
   };
 
-  const cardContent = (side) => (
+  const cardContent = (side: 'front' | 'back') => (
     <motion.div
       className="absolute w-full h-full flex flex-col p-6 bg-black border-2 border-yellow-400 shadow-lg shadow-yellow-400/50 rounded-xl"
       variants={cardVariants}

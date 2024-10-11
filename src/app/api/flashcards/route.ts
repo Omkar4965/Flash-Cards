@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import pool from "@/app/libs/postgrase";
 // GET Request to fetch flashcards
-export async function GET(req) {
+export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const user_id = searchParams.get('user_id');
@@ -23,7 +23,7 @@ export async function GET(req) {
 }
 
 // POST Request to create a new flashcard
-export async function POST(req: any) {
+export async function POST(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const user_id = searchParams.get('user_id');
@@ -46,7 +46,7 @@ export async function POST(req: any) {
 }
 
 // PUT Request to update a flashcard
-export async function PUT(req: any) {
+export async function PUT(req: Request) {
     try {
         const body = await req.json();
         const { user_id, flashcardtopics, flashcardtopicsId } = body;
@@ -67,7 +67,7 @@ export async function PUT(req: any) {
 }
 
 // DELETE Request to remove a flashcard
-export async function DELETE(req: any) {
+export async function DELETE(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const user_id = searchParams.get('user_id');
