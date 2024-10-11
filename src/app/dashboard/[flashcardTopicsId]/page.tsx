@@ -38,7 +38,7 @@ const FlashcardTopicPage: React.FC = () => {
 
   const submitHandler = async (que: string, ans: string) => {
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/queAns`, {
+      await axios.post(`api/queAns`, {
         user_id: userId,
         flashcards_id,
         question: que,
@@ -71,7 +71,7 @@ const FlashcardTopicPage: React.FC = () => {
   
     try {
 
-      await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/queAns`, {
+      await axios.put(`api/queAns`, {
         question,
         answer,
         newQuestion,
@@ -89,7 +89,7 @@ const FlashcardTopicPage: React.FC = () => {
 
   const deleteHandler = async (que: string, ans: string) => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/queAns`, {
+      await axios.delete(`api/queAns`, {
         params: {
           user_id: userId,
           flashcards_id,
@@ -113,8 +113,8 @@ const FlashcardTopicPage: React.FC = () => {
       try {
         setLoading(true);
         const [res, res2] = await Promise.all([
-          axios.get(`${process.env.NEXT_PUBLIC_URL}/api/queAns?user_id=${userId}&flashcards_id=${flashcards_id}`),
-          axios.get(`${process.env.NEXT_PUBLIC_URL}/api/flashcards?user_id=${userId}`),
+          axios.get(`api/queAns?user_id=${userId}&flashcards_id=${flashcards_id}`),
+          axios.get(`api/flashcards?user_id=${userId}`),
         ]);
 
         setFlashcardData(res.data);

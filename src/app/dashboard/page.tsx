@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
     const fetchFlashcards = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/flashcards?user_id=${userId}`);
+        const res = await axios.get(`api/flashcards?user_id=${userId}`);
         setFlashcards(res.data);
         console.log("res.data : ", res.data);
       } catch (err) {
@@ -62,10 +62,10 @@ const Dashboard: React.FC = () => {
 
     setLoading2(true);
     try {
-      const res = await axios.post<{ id: string }>(`${process.env.NEXT_PUBLIC_URL}/api/flashcards?user_id=${userId}`, {
+      const res = await axios.post<{ id: string }>(`api/flashcards?user_id=${userId}`, {
         flashcardtopics,
       });
-      const res2 = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/queAns`, {
+      const res2 = await axios.post(`api/queAns`, {
         user_id: userId,
         flashcards_id: res.data.id,
         question: flashquestion,
@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
     if (!editTopic) return;
 
     try {
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_URL}/api/flashcards`, {
+      const res = await axios.put(`api/flashcards`, {
         user_id: userId,
         flashcardtopics: editTopic,
         flashcardtopicsId: id,
@@ -111,7 +111,7 @@ const Dashboard: React.FC = () => {
   const deleteHandler = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     try {
-      const res = await axios.delete(`${process.env.NEXT_PUBLIC_URL}/api/flashcards?user_id=${userId}&id=${id}`);
+      const res = await axios.delete(`api/flashcards?user_id=${userId}&id=${id}`);
       if (res) {
         setFlashcards((prev) => prev.filter((flash) => flash.id !== id));
       }
