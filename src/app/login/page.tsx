@@ -21,7 +21,7 @@ export default function LoginPage() {
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/users`, { email: credentials.email, password: credentials.password });
+      const res = await axios.post(`api/users`, { email: credentials.email, password: credentials.password });
       if (res) {
         console.log("user login successfully", res.data[0].id);
         setUserId(res.data[0].id);
