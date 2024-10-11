@@ -30,8 +30,9 @@ export default function LoginPage() {
       } else {
         console.log("user login unsuccessfully");
       }
-    } catch (err: any) {
-      console.log(err);
+    } catch (err) {
+      const error = err as Error;
+      console.log(error);
     }
     setLoading(false);
   };
@@ -54,7 +55,7 @@ export default function LoginPage() {
             <Input
               type="email"
               placeholder="Email"
-              className="w-full p-4 border border-yellow-500 bg-black text-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
+              className="w-full p-4 border text-[15px] border-yellow-500 bg-black text-yellow-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-200"
               onChange={handleEmailChange}
             />
           </div>
@@ -75,7 +76,7 @@ export default function LoginPage() {
         </form>
 
         <div className="flex flex-col justify-center items-center mt-4">
-          <p className="text-sm text-yellow-400">Don't have an account?</p>
+          <p className="text-sm text-yellow-400">{"Don't have an account?"}</p>
           <Button
             className="mt-2 border border-yellow-500 bg-yellow-500 text-black px-4 py-2 rounded-xl hover:bg-black hover:text-yellow-400 transition duration-200"
             onClick={() => router.push('/register')}

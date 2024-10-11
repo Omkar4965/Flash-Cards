@@ -30,8 +30,9 @@ export default function RegisterPage() {
                 console.log("User registered successfully");
                 router.push('/login');
             }
-        } catch (err: any) {
-            console.error("Error during registration:", err.response?.data || err.message);
+        } catch (err) {
+            const error = err as Error;
+            console.error("Error during registration:", error);
         }
         setLoading(false);
     };

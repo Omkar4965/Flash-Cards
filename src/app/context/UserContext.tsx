@@ -16,21 +16,16 @@ const UserContext = createContext<UserContextType>({
 // Create a provider component
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<string | null>(() => {
-    // Get userId from localStorage if available
-    const userId = localStorage.getItem('userId');
-    return userId || null;
-  });
+    // Get userId from localStorage if available, only in the browser
+    const storedUserId = localStorage.getItem('userId');
+    return storedUserId || null;
+  }); // Initialize as null
 
-  
-
-  useEffect(() => {
-    // Update localStorage whenever userId changes
-    if (userId) {
-      localStorage.setItem('userId', userId);
-    } else {
-      localStorage.removeItem('userId');
-    }
-  }, [userId]);
+  // useEffect(() => {
+  //   // Get userId from localStorage if available, only in the browser
+  //   const storedUserId = localStorage.getItem('userId');
+  //   setUserId(storedUserId || null);
+  // }, []); // Only run once when the component mounts 
 
   return (
     <UserContext.Provider value={{ userId, setUserId }}>

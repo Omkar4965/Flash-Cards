@@ -13,9 +13,10 @@ export async function POST(req : Request) {
         console.log(rows)
         
         return NextResponse.json(rows, { status: 200 });
-    } catch (error : any) {
+    } catch (error ) {
+        const err = error as Error;
         return NextResponse.json({
-            error: error.message || "Error fetching users"
+            error: err || "Error fetching users"
         }, { status: 500 });
     }
 }

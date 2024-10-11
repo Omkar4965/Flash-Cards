@@ -18,10 +18,11 @@ export async function GET(req: Request) {
         const { rows } = await pool.query(query, [user_id, flashcards_id]);
         
         return NextResponse.json(rows, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
+        const err = error as Error;
         console.error("Error fetching queAns:", error);
         return NextResponse.json({
-            error: error.message || "Error fetching queAns"
+            error: err || "Error fetching queAns"
         }, { status: 500 });
     } 
 }
@@ -40,9 +41,10 @@ export async function POST(req: Request) {
         await pool.query(query, [user_id, flashcards_id, question, answer]);
         
         return NextResponse.json({ message: "QueAns added successfully" }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
+        const err = error as Error;
         return NextResponse.json({
-            error: error.message || "Error inserting queAns info"
+            error: err || "Error inserting queAns info"
         }, { status: 500 });
     }
 }
@@ -65,9 +67,10 @@ export async function PUT(req: Request) {
         }
 
         return NextResponse.json({ message: "QueAns updated successfully" }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
+        const err = error as Error;
         return NextResponse.json({
-            error: error.message || "Error updating queAns info"
+            error: err || "Error updating queAns info"
         }, { status: 500 });
     }
 }
@@ -91,9 +94,10 @@ export async function DELETE(req: Request) {
         }
 
         return NextResponse.json({ message: "Record deleted successfully" }, { status: 200 });
-    } catch (error: any) {
+    } catch (error) {
+        const err = error as Error;
         return NextResponse.json({
-            error: error.message || "Error deleting queAns"
+            error: err || "Error deleting queAns"
         }, { status: 500 });
     }
 }

@@ -67,7 +67,7 @@ const FlashcardTopicPage: React.FC = () => {
         answer : string,
         newQuestion : string,
         newAnswer : string,
-   ) => {
+   ) => { 
   
     try {
 

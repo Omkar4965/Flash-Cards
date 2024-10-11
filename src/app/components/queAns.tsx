@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Edit, FilePlus, Trash, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
 import NewFlashcard from './newQueAns';
 import { LoaderCircle } from 'lucide-react';
 

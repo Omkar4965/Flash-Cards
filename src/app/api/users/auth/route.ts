@@ -18,10 +18,11 @@ export async function POST(req: Request) {
         await pool.query(query, [name, email, password]);
 
         return NextResponse.json({ message: "User added successfully" }, { status: 201 });
-    } catch (error: any) {
+    } catch (error) {
+        const err = error as Error;
         console.error("Error inserting user:", error);
         return NextResponse.json({
-            error: "Error inserting user"
+            error: err
         }, { status: 500 });
     }
 }

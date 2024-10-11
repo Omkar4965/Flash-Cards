@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash, Pencil, Check, User } from "lucide-react"; // Import User icon
+import { Plus, Trash, Pencil, Check, User, X } from "lucide-react"; // Import User icon
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserContext";
 import axios from "axios";
@@ -197,6 +197,7 @@ const Dashboard: React.FC = () => {
       {showCreateForm ? (
         <Card className="fixed bottom-8 right-8 left-8 bg-black border-2 border-yellow-400 shadow-lg shadow-yellow-400/50 text-yellow-400 max-w-md mx-auto">
           <CardContent className="p-6">
+        <X className="text-yellow-400  transition-all duration-300 top-3 right-3 absolute size-8 p-1 hover:text-black hover:bg-yellow-400 rounded-full "  onClick={() => setShowCreateForm(false)}/>
             <h2 className="text-3xl font-bold mb-6 text-center">{flashcardtopics === "" ? "New Flashcard" : flashcardtopics}</h2>
             <div className="space-y-4">
               <Input
@@ -223,15 +224,16 @@ const Dashboard: React.FC = () => {
               >
                 {loading2 ? <LoaderCircle className="animate-spin" /> : "Create"}
               </Button>
+           
             </div>
           </CardContent>
         </Card>
       ) : (
         <Button
           onClick={() => setShowCreateForm(true)}
-          className="fixed bottom-8 right-8 p-4 bg-yellow-400 text-black rounded-full hover:bg-black hover:text-yellow-400 transition-all duration-300"
+          className="fixed bottom-8  right-8 p-5 bg-yellow-400 hover:scale-125 text-black rounded-full  hover:bg-black hover:text-yellow-400 transition-all duration-300"
         >
-          <Plus className="h-6 w-6" />
+          <Plus className="h-6 w-6 hover:scale-125" />
         </Button>
       )}
     </div>
