@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 // Define the shape of the user context state
 interface UserContextType {
