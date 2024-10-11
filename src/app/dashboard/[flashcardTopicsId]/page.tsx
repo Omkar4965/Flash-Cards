@@ -78,12 +78,12 @@ const FlashcardTopicPage: React.FC = () => {
         newAnswer,
       });
       setFlashcardData((prevData) => prevData.filter((flash) => flash.question !== question && flash.answer !== answer));
-      flashcardData.push( {
-        user_id: userId!,
-        flashcards_id,
-        question: newQuestion,
-        answer: newAnswer,
-      })
+     setFlashcardData(prev => {return [...prev, {
+      user_id: userId!,
+      flashcards_id,
+      question: newQuestion,
+      answer: newAnswer,
+    }]})
       paginate(1);
 
     } catch (error) {
